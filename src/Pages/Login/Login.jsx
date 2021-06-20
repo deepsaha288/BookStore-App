@@ -3,7 +3,8 @@ import './Login.scss';
 import { TextField, Button, InputAdornment} from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import UserService from '../../Services/UserService';
-import { withRouter } from 'react-router';
+import { withRouter} from 'react-router';
+// import { BrowserRouter as  Link } from 'react-router-dom';
 
 const service = new UserService();
 
@@ -35,6 +36,8 @@ const service = new UserService();
         })
         var valid = true;
 
+
+
         let patter = "^[0-9a-zA-Z]+([.\\-_+][0-9a-zA-Z]+)*@[a-z0-9A-Z]+.[a-z]{2,4}([.][a-zA-Z]{2,})*$";
         let pattern = new RegExp(patter);
         if (!pattern.test(this.state.email)) {
@@ -55,10 +58,35 @@ const service = new UserService();
             valid = false;
         }
 
+
+
         return valid;
 
     }
+    changeState = (e) => {
+        let name = e.target.name;
+        let value = e.target.value;
+        this.setState({ [name]: value });
+    }
 
+   
+    login = () => {
+                let data = {
+                    "email": this.state.email,
+                    "password": this.state.password,
+                }
+            
+                service.userlogin(data).then((res) => {
+                    console.log(res);
+                    localStorage.setItem('usertoken',res.data.result.accessToken);
+                    console.log(localStorage.getItem('usertoken'));
+                    this.props.history.push('/Dashboard');
+                }).catch((error) => {
+                    console.log(error);
+                })
+            }
+        
+    
 
 render() {
 
@@ -81,9 +109,9 @@ render() {
                         </InputAdornment>,
                     }}
 
-                 />
+                />
             </div>
-            <div></div>
+
             <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>    <div className="line"></div>OR<div className="line"></div></div>
             <Button variant="contained" color="secondary" onClick={this.login}>Login</Button>
             <div className="inlineButtons1">
