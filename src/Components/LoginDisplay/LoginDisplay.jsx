@@ -27,8 +27,12 @@ export default class LoginDisplay extends React.Component {
             mobileErrmsg: "",
         })
     }
-    
-
+    changeState = (e) => {
+        let name = e.target.name;
+        let value = e.target.value;
+        this.setState({ [name]: value });
+        console.log(`${this.state.fullName}  ${this.state.email}   ${this.state.password}  ${this.state.mobile}`);
+    }
     validationCheck = () => {
         this.setState({
             fullNameError: false,
@@ -37,9 +41,9 @@ export default class LoginDisplay extends React.Component {
             emailErrormsg: '',
             passwordError: false,
             passwordErrormsg: '',
-            mobileError:false,
-            mobileErrormsg:""
-            })
+            mobileError: false,
+            mobileErrormsg: ""
+        })
         var valid = true;
         if (this.state.fullName.length === 0) {
             this.setState({ fullNameError: true })
@@ -83,77 +87,74 @@ export default class LoginDisplay extends React.Component {
 
     }
 
-    
+
     changetoSignup = () => {
         this.setState({ login: true })
     }
     changetologin = () => {
         this.setState({ login: false })
     }
-    signUp=(e)=>{
-       
-          }
-    Login=()=>{
-    
+    signUp = (e) => {
+        e.preventDefault();
+        if (this.validationCheck()) {
+            let data = {
+                "fullName": this.state.fullName,
+                "email": this.state.email,
+                "password": this.state.password,
+                "phone": this.state.mobile
+            }
+            service.userRegistration(data).then((result) => {
+                console.log(result);
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
     }
-
+    Login = () => {
+        let data = {
+            "email": "",
+            "password": ""
+        }
+        service.userlogin(data).then((result) => {
+            console.log(result);
+        }).catch((error) => {
+            console.log(error);
+        })
+    }
 
     render() {
         return (<>
-                <div className="imagebody">
+            <div className="imagebody">
                 <img src={LoginImage} style={{ borderRadius: '50%', width: '215px', height: '215px' }} alt="" />
-                         <div className="online"> ONLINE BOOK SHOPPING</div></div>
-                    <div className="form">
-                       <div className="inlinelinks"> 
-                       <div onClick={this.changetoSignup}>Login</div> 
-                        <div onClick={this.changetologin}>Signup</div>
-                        </div>
-                        { this.state.login ? <Login /> : <><TextField
-                                id="outlined-basic"
-                                label="Fullname"
-                                className="textField"
-                                variant="outlined"
-                                margin='dense'
-                                name="fullName"
-                                error={this.state.fullNameError}
-                                helperText={this.state.fullNameErrormsg}
-                                onChange={(e) => this.changeState(e)}
-                            /> <TextField
-                                    id="outlined-basic"
-                                    label="Email "
-                                className="textField"
+                <div className="online"> ONLINE BOOK SHOPPING</div></div>
+            <div className="form">
+                <div className="inlinelinks">
+                    <div onClick={this.changetoSignup}>Login</div>
+                    <div onClick={this.changetologin}>Signup</div>
+                </div>
+                {this.state.login ? <Login /> :
+                    <>
+                        <TextField id="outlined-basic" label="Fullname" className="textField" variant="outlined" margin='dense'
+                            name="fullName" error={this.state.fullNameError} helperText={this.state.fullNameErrormsg}
+                            onChange={(e) => this.changeState(e)} />
 
-                                    variant="outlined"
-                                    margin='dense'
-                                    name="email"
-                                    onChange={(e) => this.changeState(e)}
-                                    error={this.state.emailError}
-                                    helperText={this.state.emailErrormsg}
-                                /> <TextField
-                                    id="outlined-basic"
-                                    label="Password"
-                                    className="textField"
-                                    variant="outlined"
-                                    margin='dense'
-                                    name="password"
-                                    onChange={(e) => this.changeState(e)}
-                                    error={this.state.passwordError}
-                                    helperText={this.state.passwordErrormsg}
-                                /> <TextField
-                                    id="outlined-basic"
-                                    label="mobile"
-                                    variant="outlined"
-                                    margin='dense'
-                                    className="textField"
-                                    name="mobile"
-                                    onChange={(e) => this.changeState(e)}
-                                    error={this.state.mobileError}
-                                    helperText={this.state.mobileErrormsg}
-                                />
-                                <Button variant="contained"  onClick={(e)=>this.signUp(e)}>Signup</Button> </>}
-                               
-                    </div>
+                        <TextField id="outlined-basic" label="Email " className="textField" variant="outlined" margin='dense'
+                            name="email" onChange={(e) => this.changeState(e)} error={this.state.emailError}
+                            helperText={this.state.emailErrormsg} />
+
+                        <TextField id="outlined-basic" label="Password" className="textField" variant="outlined" margin='dense'
+                            name="password" onChange={(e) => this.changeState(e)} error={this.state.passwordError}
+                            helperText={this.state.passwordErrormsg} />
+
+                        <TextField id="outlined-basic" label="mobile " variant="outlined" margin='dense' className="textField"
+                            name="mobile" onChange={(e) => this.changeState(e)} error={this.state.mobileError}
+                            helperText={this.state.mobileErrormsg} />
+
+                        <Button variant="contained" onClick={(e) => this.signUp(e)}>Signup</Button> </>}
+
+            </div>
 
         </>)
     }
 }
+

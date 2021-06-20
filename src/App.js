@@ -1,6 +1,7 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Signup from './Pages/Signup/Signup';
+import Dashboard from './Pages/Dashboard/Dashboard';
 
 function App() {
   const Routing =()=>{
@@ -8,7 +9,8 @@ function App() {
     <Router>
       <div>
         <Switch>
-         <Route exact path="/" component={Signup} ></Route>         
+         <Route exact path="/" component={Signup} ></Route> 
+         <Route path="/Dashboard" component={Dashboard}></Route>        
          </Switch>
       </div>
     </Router>)
