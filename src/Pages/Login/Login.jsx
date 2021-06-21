@@ -1,12 +1,13 @@
 import React from 'react';
 import './Login.scss';
-import { TextField, Button, InputAdornment} from '@material-ui/core';
+import { TextField, makeStyles, Button, InputAdornment, Input } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
+import clsx from 'clsx';
 import UserService from '../../Services/UserService';
-import { withRouter} from 'react-router';
-// import { BrowserRouter as  Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
 
 const service = new UserService();
+
 
  class Login extends React.Component {
     constructor(props) {
@@ -45,14 +46,14 @@ const service = new UserService();
             this.setState({ emailErrormsg: "Invalid Email address" })
             valid = false;
         }
-        if (this.state.email.length === 0) {
+        if (this.state.email.length == 0) {
             this.setState({ emailError: true })
             this.setState({ emailErrormsg: "Choose Email address" })
             valid = false;
         }
 
 
-        if (this.state.password.length === 0) {
+        if (this.state.password.length == 0) {
             this.setState({ passwordError: true })
             this.setState({ passwordErrormsg: "Enter a password" })
             valid = false;
@@ -69,24 +70,50 @@ const service = new UserService();
         this.setState({ [name]: value });
     }
 
-   
+    changeLogin = () => {
+        console.log("im working");
+        this.setState({ login: !this.state.login })
+    }
     login = () => {
+        if (this.validationCheck()) {
+            if (this.state.key == "admin") {
                 let data = {
                     "email": this.state.email,
                     "password": this.state.password,
                 }
-            
-                service.userlogin(data).then((res) => {
+                service.adminlogin(data).then((res) => {
+                    localStorage.setItem('token', res.data.result.accessToken);
                     console.log(res);
-                    localStorage.setItem('usertoken',res.data.result.accessToken);
-                    console.log(localStorage.getItem('usertoken'));
-                    this.props.history.push('/Dashboard');
+                    console.log(localStorage.getItem('token'));
+                    this.props.history.push('/adminpanel');
                 }).catch((error) => {
                     console.log(error);
                 })
             }
-        
-    
+            else {
+                let data = {
+                    "email": this.state.email,
+                    "password": this.state.password,
+                }
+                service.userlogin(data).then((res) => {
+                    console.log(res);
+                    localStorage.setItem('usertoken',res.data.result.accessToken);
+                    console.log(localStorage.getItem('usertoken'));
+                    this.props.history.push('/userdashboard');
+                }).catch((error) => {
+                    console.log(error);
+                })
+            }
+        }
+    }
+
+
+changeKey = () => {
+    if (this.state.key == "user")
+        this.setState({ key: "admin" })
+    else
+        this.setState({ key: "user" })
+}
 
 render() {
 
@@ -109,7 +136,7 @@ render() {
                         </InputAdornment>,
                     }}
 
-                />
+                />  <span className="span" onClick={this.changeKey}>  </span>
             </div>
 
             <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>    <div className="line"></div>OR<div className="line"></div></div>

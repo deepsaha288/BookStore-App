@@ -1,22 +1,10 @@
-@mixin flex($property, $property1, $property2) {
-    display: flex;
-    flex-direction: $property;
-    justify-content: $property1;
-    align-items: $property2;
-}
-@mixin box($width,$height,$boxsizing){
-    width: $width;
-    height: $height; 
-    box-sizing: $boxsizing;   
-}
-
+@import '../../Pages/Styles/mixins.scss';
 .footer{
     background-color: black;
     width: 100%;
     height: 40px;   
     font-family: Roboto;
     color: white;
-    display:flex;
     @include flex(row,flex-start,center);
     padding-left: 200px;
     
