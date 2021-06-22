@@ -4,13 +4,13 @@ import Book from '../../Assets/education.svg'
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
-import { BrowserRouter as Router, Route, Link, Navlink, Switch, BrowserRouter,Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link} from 'react-router-dom';
 
 export default class Appbar extends react.Component{
-    constructor(props){
-        super(props);
+    // constructor(props){
+    //     super(props);
        
-    }
+    // }
     sendSearchtext =(e)=>{
       this.props.search(e.target.value);
     }

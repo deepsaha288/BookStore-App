@@ -4,7 +4,7 @@ import './cart.scss';
 import UserService from '../../Services/UserService';
 import AddCircleOutlineTwoToneIcon from '@material-ui/icons/AddCircleOutlineTwoTone';
 import RemoveCircleOutlineTwoToneIcon from '@material-ui/icons/RemoveCircleOutlineTwoTone';
-import { TextField, makeStyles, Button, InputAdornment, Input } from '@material-ui/core';
+import { TextField, Button  } from '@material-ui/core';
 import Dont from "../../Assets/don't.png";
 
 
@@ -27,7 +27,13 @@ class CartItems extends React.Component {
             showOs: false,
             reload:true
         })
+    
     }
+  
+    
+    
+      
+    
     componentDidMount() {
         service.getCartItems().then((res) => {
             console.log(res);
@@ -36,10 +42,40 @@ class CartItems extends React.Component {
         })
     }
     order = () => {
-       
+        let store = [];
+        this.state._cartbooks.map((val) => {
+            let arr = {
+                "product_id": val.product_id._id,
+                "product_name": val.product_id.bookName,
+                "product_quantity":val.quantityToBuy,
+                "product_price":val.product_id.price
+            };
+            store.push(arr);
+        })
+
+        let data = {
+            orders: store,
+        };
+        service.order(data).then((res) => {
+            console.log(res);
+            this.props.history.push('/ordersucess')
+        }).catch((err) => {
+            console.log(err);
+        })
+      this.state._cartbooks.map((val)=>{
+        this.removeCartId(val._id);
+      })
     }
     increment = (productid, quantity) => {
-       
+        let data = {
+            "quantityToBuy": quantity + 1
+        }
+        console.log(data, productid);
+        service.cartIncrementDecrement(data, productid).then((res) => {
+            console.log(res);
+        }).catch((err) => {
+            console.log(err);
+        })
     }
     changeStates = (e) => {
         let name = e.target.name;
@@ -47,21 +83,46 @@ class CartItems extends React.Component {
         this.setState({ [name]: value });
     }
     decrement = (productid, quantity) => {
-       
+        let data = {
+            quantityToBuy: quantity - 1
+        }
+        service.cartIncrementDecrement(data, productid).then((res) => {
+            console.log(res);
+        }).catch((err) => {
+            console.log(err);
+        })
     }
     submitUserDetails = () => {
-      
+        let data = {
+            "addressType": "Home",
+            "fullAddress": `${this.state.name},${this.state.address},${this.state.locality},${this.state.pincode},${this.state.phno}`,
+            "city": this.state.city,
+            "state": this.state.state
+        }
+        service.userDetails(data).then((res) => {
+            console.log(res);
+        }).catch((err) => {
+            console.log(err);
+        })
+        this.setState({ showOs: true });
     }
     showCD = () => {
         this.setState({ show: true });
     }
     removeCartId =(id)=>{
-       
+        service.removeCartItem(id).then((res)=>{
+            console.log(res);
+            this.setState({reload : !this.state.reload})
+           this.componentDidMount();
+        }).catch((err)=>{
+            console.log(err);
+        })
     }
     render() {
         return (<>
             <Appbar show={false} />
-            <div className="cartcontent">
+            
+            <div className="cartcontent"> <span className="Home">Home/MyCart</span> 
                 <div className="cartitems box">
                     <div className="mycart"> My Cart({this.state._cartbooks.length})</div>
 
@@ -82,7 +143,7 @@ class CartItems extends React.Component {
 
                                     </div>
                                 </div></div>
-                            {this.state._cartbooks.length - 1 == index
+                            {this.state._cartbooks.length - 1 === index
                                 ? this.state.show ? null : <Button variant="contained" color="primary" onClick={this.showCD}>
                                     Place Order</Button> : null}
                         </div>)
@@ -137,7 +198,7 @@ class CartItems extends React.Component {
                                         <div className="price">Rs.{val.product_id.price}</div>
                                       
                                     </div></div>
-                                {this.state._cartbooks.length - 1 == index
+                                {this.state._cartbooks.length - 1 === index
                                     ? <Button variant="contained" color="primary" onClick={this.order}>
                                         CHECKOUT </Button> : null}
                             </div>)

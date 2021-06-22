@@ -1,8 +1,7 @@
 import React from 'react';
 import './Login.scss';
-import { TextField, makeStyles, Button, InputAdornment, Input } from '@material-ui/core';
+import { TextField, Button, InputAdornment } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import clsx from 'clsx';
 import UserService from '../../Services/UserService';
 import { withRouter } from 'react-router';
 
@@ -46,14 +45,14 @@ const service = new UserService();
             this.setState({ emailErrormsg: "Invalid Email address" })
             valid = false;
         }
-        if (this.state.email.length == 0) {
+        if (this.state.email.length === 0) {
             this.setState({ emailError: true })
             this.setState({ emailErrormsg: "Choose Email address" })
             valid = false;
         }
 
 
-        if (this.state.password.length == 0) {
+        if (this.state.password.length === 0) {
             this.setState({ passwordError: true })
             this.setState({ passwordErrormsg: "Enter a password" })
             valid = false;
@@ -76,7 +75,7 @@ const service = new UserService();
     }
     login = () => {
         if (this.validationCheck()) {
-            if (this.state.key == "admin") {
+            if (this.state.key ==="admin") {
                 let data = {
                     "email": this.state.email,
                     "password": this.state.password,
@@ -109,7 +108,7 @@ const service = new UserService();
 
 
 changeKey = () => {
-    if (this.state.key == "user")
+    if (this.state.key === "user")
         this.setState({ key: "admin" })
     else
         this.setState({ key: "user" })

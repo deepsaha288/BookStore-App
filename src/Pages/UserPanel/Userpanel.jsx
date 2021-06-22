@@ -7,10 +7,10 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import UserService from '../../Services/UserService';
 import Dont from "../../Assets/don't.png";
-import { TextField, makeStyles, Button, InputAdornment, Input } from '@material-ui/core';
+import { Button} from '@material-ui/core';
 import Paginations from "@material-ui/lab/Pagination";
 import Bookstore from '../../FluxArchitecture/store/bookstore';
-import {addToCart} from '../../FluxArchitecture/Actions/actions';
+import { addToCart } from '../../FluxArchitecture/Actions/actions';
 
 const service = new UserService();
 
@@ -19,25 +19,25 @@ class UserDashboard extends React.Component {
         super(props);
         this.state = ({
             age: "",
-            _books:[],
+            _books: [],
             _cartBooks: [],
-            postsPerPage:"12",
-            currentPage:"1",
+            postsPerPage: "12",
+            currentPage: "1",
         })
     }
     handleChange = (event) => {
         this.setState({ age: event.target.value });
     };
-    componentDidMount(){
-        var books=[];
+    componentDidMount() {
+        var books = [];
         service.getAllBooks().then((res) => {
-        books = res.data.result;
-        var boo = Bookstore.storeBooks(books);
-        this.setState({_books : boo});   
+            books = res.data.result;
+            var boo = Bookstore.storeBooks(books);
+            this.setState({ _books: boo });
         }).catch((err) => {
-        console.log(err);
-        })   
-        
+            console.log(err);
+        })
+
         let token = localStorage.getItem('token');
         service.getCartItems().then((res) => {
             console.log(res);
@@ -46,45 +46,43 @@ class UserDashboard extends React.Component {
             console.log(err);
         })
     }
-    componentWillMount(){
-        Bookstore.on("change",this.getBooks)
+    componentWillMount() {
+        Bookstore.on("change", this.getBooks)
     }
-    componentWillUnmount(){
-        Bookstore.removeListener("change",this.getBooks);
+    componentWillUnmount() {
+        Bookstore.removeListener("change", this.getBooks);
     }
-    getBooks=()=>{       
-     this.setState({
-         _books:Bookstore.getBooks(),
-     })
+    getBooks = () => {
+        console.log("rerender");
+        this.setState({
+            _books: Bookstore.getBooks(),
+        })
     }
     addToCart1 = (productid) => {
         addToCart(productid);
-        let data = {
-            isCart: true
-        }
-        service.addtocart(productid, data).then((res) => {
+
+
+    }
+    addToWishlist = (productid) => {
+        service.addtowishlist(productid).then((res) => {
             console.log(res);
         }).catch((err) => {
             console.log(err);
         })
-
-    }
-    addToWishlist = (productid) => {
-      
     }
     checkItemsinCart = (bookname) => {
         let check = true;
         this.state._cartBooks.map((val) => {
-            if (val.product_id.bookName == bookname) {
+            if (val.product_id.bookName === bookname) {
                 check = false
             }
         })
         return check;
     }
-    changepage = (e,newpage) => {
+    changepage = (e, newpage) => {
         console.log("imvdn");
         console.log(e.target.value);
-        this.setState({currentPage:newpage});
+        this.setState({ currentPage: newpage });
     };
 
 
@@ -95,7 +93,7 @@ class UserDashboard extends React.Component {
         const LastBook = this.state.currentPage * this.state.postsPerPage;
         const FirstBook = LastBook - this.state.postsPerPage;
         console.log(this.state._books);
-        console.log('vfvc',this.state._books);
+        console.log('vfvc', this.state._books);
         const currentBooks = this.state._books.slice(FirstBook, LastBook);
         return (
             <>
@@ -104,7 +102,7 @@ class UserDashboard extends React.Component {
                     <div className="inlineheader">
                         <div className="headers">
                             Books
-                   </div>
+                        </div>
                         <div className="select">
                             <FormControl variant="outlined" >
                                 <InputLabel id="demo-simple-select-filled-label">sortbyrelevance</InputLabel>
@@ -124,39 +122,39 @@ class UserDashboard extends React.Component {
                             </FormControl>
                         </div>
                     </div>
-                    <div className="books">                   
-                     {currentBooks.map((book, index) => {
-                        return <div className="showbooks">
-                            <div className="bookimage">
-                                <img src={Dont} alt="" />
-                            </div>
-                            <div className="content">
-                                <div className="bookname">{book.bookName}</div>
-                                <div className="author">by{book.author}</div>
-                                <div className="rating">
-                                <div className = "rate">4.5 &#9733;</div>
+                    <div className="books">
+                        {currentBooks.map((book, index) => {
+                            return <div className="showbooks">
+                                <div className="bookimage">
+                                    <img src={Dont} alt="" />
                                 </div>
-                                <div className="price">Rs.{book.price}</div>
+                                <div className="content">
+                                    <div className="bookname">{book.bookName}</div>
+                                    <div className="author">by{book.author}</div>
+                                    <div className="rating">
+                                        <div className="rate">4.5 &#9733;</div>
+                                    </div>
+                                    <div className="price">Rs.{book.price}</div>
 
-                                <div className="inlinebuttons">
-                                    {this.checkItemsinCart(book.bookName) ? <><Button variant="contained" className='addtobag' onClick={() => this.addToCart1(book._id)} color="primary">AddtoBag</Button>
-                                        <Button variant="contained" className='wishlist' color="default" onClick={() => this.addToWishlist(book._id)}>Wishlist </Button></>
-                                        : <Button variant="contained" fullWidth className="addedtobag">Added to bag</Button>}
+                                    <div className="inlinebuttons">
+                                        {this.checkItemsinCart(book.bookName) ? <><Button variant="contained" className='addtobag' onClick={() => this.addToCart1(book._id)} color="primary">AddtoBag</Button>
+                                            <Button variant="contained" className='wishlist' color="default" onClick={() => this.addToWishlist(book._id)}>Wishlist </Button></>
+                                            : <Button variant="contained" fullWidth className="addedtobag">Added to bag</Button>}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    })
-                    }
-                   
+                        })
+                        }
+
                     </div>
                     <div className="paginationBlock">
-      <Paginations
-        count={Math.floor(this.state._books.length / this.state.postsPerPage + 1)}
-        variant="outlined"
-        shape="rounded"
-        onChange={this.changepage}
-      />
-    </div>
+                        <Paginations
+                            count={Math.floor(this.state._books.length / this.state.postsPerPage + 1)}
+                            variant="outlined"
+                            shape="rounded"
+                            onChange={this.changepage}
+                        />
+                    </div>
 
                 </div>
             </>
