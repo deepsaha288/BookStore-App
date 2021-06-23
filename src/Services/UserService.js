@@ -5,9 +5,9 @@ const axios = new AxiosService();
 export default class userService {
     baseUrl = " https://backend-bookstore.herokuapp.com/";
  
-    adminlogin =(data) =>{
-        return axios.postMethod(`${this.baseUrl}bookstore_user/admin/login`, data);
-    }
+    //  adminlogin =(data) =>{
+    //      return axios.postMethod(`${this.baseUrl}bookstore_user/admin/login`, data);
+    //  }
     userRegistration = (data) => {
         return axios.postMethod(`${this.baseUrl}bookstore_user/registration`, data);
     }

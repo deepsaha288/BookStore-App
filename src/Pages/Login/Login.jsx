@@ -75,21 +75,6 @@ const service = new UserService();
     }
     login = () => {
         if (this.validationCheck()) {
-            if (this.state.key ==="admin") {
-                let data = {
-                    "email": this.state.email,
-                    "password": this.state.password,
-                }
-                service.adminlogin(data).then((res) => {
-                    localStorage.setItem('token', res.data.result.accessToken);
-                    console.log(res);
-                    console.log(localStorage.getItem('token'));
-                    this.props.history.push('/adminpanel');
-                }).catch((error) => {
-                    console.log(error);
-                })
-            }
-            else {
                 let data = {
                     "email": this.state.email,
                     "password": this.state.password,
@@ -104,15 +89,8 @@ const service = new UserService();
                 })
             }
         }
-    }
+    
 
-
-changeKey = () => {
-    if (this.state.key === "user")
-        this.setState({ key: "admin" })
-    else
-        this.setState({ key: "user" })
-}
 
 render() {
 
@@ -135,7 +113,7 @@ render() {
                         </InputAdornment>,
                     }}
 
-                />  <span className="span" onClick={this.changeKey}>  </span>
+                /> 
             </div>
 
             <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>    <div className="line"></div>OR<div className="line"></div></div>

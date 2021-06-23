@@ -60,8 +60,7 @@ class UserDashboard extends React.Component {
     }
     addToCart1 = (productid) => {
         addToCart(productid);
-
-
+      
     }
     addToWishlist = (productid) => {
         service.addtowishlist(productid).then((res) => {

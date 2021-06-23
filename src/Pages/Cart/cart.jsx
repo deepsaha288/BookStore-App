@@ -4,7 +4,7 @@ import './cart.scss';
 import UserService from '../../Services/UserService';
 import AddCircleOutlineTwoToneIcon from '@material-ui/icons/AddCircleOutlineTwoTone';
 import RemoveCircleOutlineTwoToneIcon from '@material-ui/icons/RemoveCircleOutlineTwoTone';
-import { TextField, Button  } from '@material-ui/core';
+import { TextField, Button } from '@material-ui/core';
 import Dont from "../../Assets/don't.png";
 
 
@@ -25,15 +25,72 @@ class CartItems extends React.Component {
             state: "",
             show: false,
             showOs: false,
-            reload:true
+            reload: true,
+            nameError: false, phnoError: false, pincodeError: false, localityError: false,
+            addressError: false, cityError: false, stateError: false,
         })
-    
+
     }
-  
-    
-    
-      
-    
+    validationCheck = () => {
+        this.setState({
+            nameError: false, nameErrormsg: "", phnoError: false, phnoErrormsg: "", pincodeError: false,
+            pincodeErrormsg: "", localityError: false, localityErrormsg: "", addressError: false,
+            addressErrormsg: "", cityError: false, cityErrormsg: "", stateError: false, stateErrormsg: ""
+        })
+        var valid = true;
+        if (this.state.name.length == 0) {
+            this.setState({ nameError: true })
+            this.setState({ nameErrormsg: "Enter your name " })
+            valid = false;
+        }
+       
+        let patter = /^[0-9]{10}$/;
+        let pattern = new RegExp(patter);
+        if (!pattern.test(this.state.phno)) {
+            this.setState({ phnoError: true })
+            this.setState({ phnoErrormsg: " enter your 10 digit mobile number" })
+            valid = false;
+        }
+            let pincodePattern = /^[0-9]{6}$/;
+            let pincodeNo = new RegExp(pincodePattern);
+            if (!pincodeNo.test(this.state.pincode)) {
+             this.setState({ pincodeError: true })
+             this.setState({ pincodeErrormsg: "please enter your pin code" })
+             valid = false;
+         }
+        let localityPattern = /[a-zA-Z][a-zA-Z ]*/;
+        let local = new RegExp(localityPattern)
+        if (!local.test(this.state.locality)) {
+            this.setState({ localityError: true })
+            this.setState({ localityErrormsg: "please enter your locality" })
+            valid = false;
+        }
+        let addressPattern = /[a-zA-Z][a-zA-Z ]*/;
+        let localaddress = new RegExp(addressPattern)
+        if (!localaddress.test(this.state.address)) {
+            this.setState({ addressError: true })
+            this.setState({ addressErrormsg: "please enter  your address " })
+            valid = false;
+        }
+        if (this.state.city.length == 0) {
+            this.setState({ cityError: true })
+            this.setState({ cityErrormsg: "Enter your  city " })
+            valid = false;
+        }
+        let statePattern = /[a-zA-Z][a-zA-Z ]*/;
+        let stateName = new RegExp(statePattern)
+        if (!stateName.test(this.state.state)) {
+            this.setState({ stateError: true })
+            this.setState({ stateErrormsg: "please enter your state name" })
+            valid = false;
+        }
+        return valid;
+
+    }
+
+
+
+
     componentDidMount() {
         service.getCartItems().then((res) => {
             console.log(res);
@@ -41,14 +98,20 @@ class CartItems extends React.Component {
             console.log(JSON.stringify(this.state._cartbooks));
         })
     }
+    changeState = (e) => {
+        let name = e.target.name;
+        let value = e.target.value;
+        this.setState({ [name]: value });
+    }
+
     order = () => {
         let store = [];
         this.state._cartbooks.map((val) => {
             let arr = {
                 "product_id": val.product_id._id,
                 "product_name": val.product_id.bookName,
-                "product_quantity":val.quantityToBuy,
-                "product_price":val.product_id.price
+                "product_quantity": val.quantityToBuy,
+                "product_price": val.product_id.price
             };
             store.push(arr);
         })
@@ -62,9 +125,9 @@ class CartItems extends React.Component {
         }).catch((err) => {
             console.log(err);
         })
-      this.state._cartbooks.map((val)=>{
-        this.removeCartId(val._id);
-      })
+        this.state._cartbooks.map((val) => {
+            this.removeCartId(val._id);
+        })
     }
     increment = (productid, quantity) => {
         let data = {
@@ -93,36 +156,39 @@ class CartItems extends React.Component {
         })
     }
     submitUserDetails = () => {
-        let data = {
-            "addressType": "Home",
-            "fullAddress": `${this.state.name},${this.state.address},${this.state.locality},${this.state.pincode},${this.state.phno}`,
-            "city": this.state.city,
-            "state": this.state.state
+        if (this.validationCheck()) {
+            let data = {
+                "addressType": "Home",
+                "fullAddress": `${this.state.name},${this.state.address},${this.state.locality},${this.state.pincode},${this.state.phno}`,
+                "city": this.state.city,
+                "state": this.state.state
+            }
+
+            service.userDetails(data).then((res) => {
+                console.log(res);
+            }).catch((err) => {
+                console.log(err);
+            })
+            this.setState({ showOs: true });
         }
-        service.userDetails(data).then((res) => {
-            console.log(res);
-        }).catch((err) => {
-            console.log(err);
-        })
-        this.setState({ showOs: true });
     }
     showCD = () => {
         this.setState({ show: true });
     }
-    removeCartId =(id)=>{
-        service.removeCartItem(id).then((res)=>{
+    removeCartId = (id) => {
+        service.removeCartItem(id).then((res) => {
             console.log(res);
-            this.setState({reload : !this.state.reload})
-           this.componentDidMount();
-        }).catch((err)=>{
+            this.setState({ reload: !this.state.reload })
+            this.componentDidMount();
+        }).catch((err) => {
             console.log(err);
         })
     }
     render() {
         return (<>
             <Appbar show={false} />
-            
-            <div className="cartcontent"> <span className="Home">Home/MyCart</span> 
+
+            <div className="cartcontent"> <span className="Home">Home/MyCart</span>
                 <div className="cartitems box">
                     <div className="mycart"> My Cart({this.state._cartbooks.length})</div>
 
@@ -139,7 +205,7 @@ class CartItems extends React.Component {
                                         <AddCircleOutlineTwoToneIcon style={{ opacity: 0.4 }} onClick={() => this.increment(val.product_id._id, val.quantityToBuy)} />
                                         <div className="quantity">{val.quantityToBuy}</div>
                                         <RemoveCircleOutlineTwoToneIcon style={{ opacity: 0.4 }} onClick={() => this.decrement(val.product_id._id, val.quantityToBuy)} />
-                                        <div className="remove" onClick={()=>this.removeCartId(val._id)}>Remove</div>
+                                        <div className="remove" onClick={() => this.removeCartId(val._id)}>Remove</div>
 
                                     </div>
                                 </div></div>
@@ -157,27 +223,52 @@ class CartItems extends React.Component {
                         <TextField id="outlined-basic" label="Name" variant="outlined"
                             name="name"
                             margin='dense' onChange={this.changeStates}
+                            onChange={(e) => this.changeState(e)}
+                            error={this.state.nameError}
+                            helperText={this.state.nameErrormsg}
                         />
                         <TextField id="outlined-basic" label="Phone number" variant="outlined"
                             name="phno"
+                            onChange={(e) => this.changeState(e)}
+
+                            error={this.state.phnoError}
+                            helperText={this.state.phnoErrormsg}
                             margin='dense' onChange={this.changeStates}
                         /><TextField id="outlined-basic" label="Pin Code" variant="outlined"
                             name="pincode"
-                            margin='dense' onChange={this.changeStates}
+                            onChange={(e) => this.changeState(e)}
+                             error={this.state.pincodeError}
+                             helperText={this.state.pincodeErrormsg}
+                             margin='dense' onChange={this.changeStates}
                         /><TextField id="outlined-basic" label="Locality" variant="outlined"
                             name="locality"
+                            margin='dense' onChange={this.changeStates}
+
+                            error={this.state.localityError}
+                            helperText={this.state.localityErrormsg}
                             margin='dense' onChange={this.changeStates}
                         />
                         <TextField id="outlined-basic" label="address" variant="outlined"
                             name="address" fullWidth className="address"
                             margin="dense" onChange={this.changeStates}
+
+                            onChange={(e) => this.changeState(e)}
+                            error={this.state.addressError}
+                            helperText={this.state.addressErrormsg}
                         /><TextField id="outlined-basic" label="city/town" variant="outlined"
                             name="city"
                             margin='dense' onChange={this.changeStates}
+                            onChange={(e) => this.changeState(e)}
+                            error={this.state.cityError}
+                            helperText={this.state.cityErrormsg}
                         />
                         <TextField id="outlined-basic" label="state" variant="outlined"
                             name="state"
                             margin='dense' onChange={this.changeStates}
+
+                            onChange={(e) => this.changeState(e)}
+                            error={this.state.stateError}
+                            helperText={this.state.stateErrormsg}
                         />
 
                     </div>
@@ -196,7 +287,7 @@ class CartItems extends React.Component {
                                         <div>{val.product_id.bookName}</div>
                                         <div className="author"> by{val.product_id.author}</div>
                                         <div className="price">Rs.{val.product_id.price}</div>
-                                      
+
                                     </div></div>
                                 {this.state._cartbooks.length - 1 === index
                                     ? <Button variant="contained" color="primary" onClick={this.order}>
