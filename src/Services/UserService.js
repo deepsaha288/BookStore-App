@@ -5,9 +5,6 @@ const axios = new AxiosService();
 export default class userService {
     baseUrl = " https://backend-bookstore.herokuapp.com/";
  
-    adminlogin =(data) =>{
-        return axios.postMethod(`${this.baseUrl}bookstore_user/admin/login`, data);
-    }
     userRegistration = (data) => {
         return axios.postMethod(`${this.baseUrl}bookstore_user/registration`, data);
     }
@@ -36,24 +33,6 @@ export default class userService {
             }
         });
     }
-   
-
-    deleteBook =(product_id)=>{
-        console.log(product_id);
-        return axios.deleteMethod(`${this.baseUrl}bookstore_user/admin/delete/book/${product_id}`,{
-            headers:{
-                'x-access-token':localStorage.getItem('token'),
-            }
-        });
-    }
-
-    updateBook =(data,product_id)=>{
-        return axios.putMethod(`${this.baseUrl}bookstore_user/admin/update/book/${product_id}`,data,{
-            headers:{
-                'x-access-token':localStorage.getItem('token'),
-            }
-        });
-    }
     
     getCartItems=()=>{
         return axios.getMethod(`${this.baseUrl}bookstore_user/get_cart_items`,{
@@ -62,5 +41,37 @@ export default class userService {
             } 
         })       
 
-    }  
+    } 
+    cartIncrementDecrement=(data,cartItem_id)=>{
+        return axios.putMethod(`${this.baseUrl}bookstore_user/cart_item_quantity/${cartItem_id}`,data,{
+            headers:{
+                'x-access-token' :localStorage.getItem('usertoken'),
+            } 
+        })     
+    }
+    userDetails=(data)=>{
+        return axios.putMethod(`${this.baseUrl}bookstore_user/edit_user`,data,{
+            headers:{
+                'x-access-token' :localStorage.getItem('usertoken'),
+            } 
+        })     
+
+    }
+
+   order=(data)=>{
+        console.log(localStorage.getItem('usertoken'));
+        return axios.postMethod(`${this.baseUrl}bookstore_user/add/order`,data,{
+            headers:{
+                'x-access-token':localStorage.getItem('usertoken'),
+            }
+        });
+    }
+    removeCartItem=(id)=>{
+        console.log(id);
+        return axios.deleteMethod(`${this.baseUrl}bookstore_user/remove_cart_item/${id}`,{
+            headers:{
+                'x-access-token':localStorage.getItem('usertoken'),
+            }
+        });
+    }       
 }

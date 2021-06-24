@@ -1,9 +1,8 @@
 import React from 'react';
 import './LoginPart.scss';
 import LoginImage from '../../Assets/loginimage.png';
-import { TextField, makeStyles, Button, InputAdornment, Input } from '@material-ui/core';
+import { TextField,  Button } from '@material-ui/core';
 import UserService from '../../Services/UserService';
-import { BrowserRouter as Router, Route, Link, Navlink, Switch, BrowserRouter } from 'react-router-dom';
 import Login from '../../Pages/Login/Login';
 
 

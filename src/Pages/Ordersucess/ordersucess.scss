@@ -1,0 +1,35 @@
+@import "../Styles/mixins.scss";
+.orderbody {
+    @include box(max-width, 70.2vh, border-box);
+    @include flex(column, space-evenly, center);
+    margin: 0 15.5%;
+    margin-bottom: 13vh;
+    font:Roboto;
+    .image{
+        padding: 10px;
+    }
+    .texts{
+        text-align: center;
+        padding: 10px;
+        width: 350px;
+        font-size: 16px;
+    }
+    .table{
+        border: 1px solid grey;
+        th{
+            background-color: #DCDCDC;
+        }
+         td{
+             padding: 15px;
+         }
+    }
+    .continue-shop{
+        background-color: #3371B5;
+        height: 35px;
+        color: white;
+
+    }
+    .MuiButton-fullWidth {
+        width: 30% !important;
+    }
+}

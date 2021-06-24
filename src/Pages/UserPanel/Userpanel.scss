@@ -25,7 +25,6 @@
         border: 1px solid #E2E2E2;
         background: white;
         margin: 10px;
-        // margin-left: 0;
         .bookimage {
             @include flex(row,center,center);
             @include box(100%,50%,border-box);
