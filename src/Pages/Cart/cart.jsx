@@ -38,7 +38,7 @@ class CartItems extends React.Component {
             addressErrormsg: "", cityError: false, cityErrormsg: "", stateError: false, stateErrormsg: ""
         })
         var valid = true;
-        if (this.state.name.length == 0) {
+        if (this.state.name.length === 0) {
             this.setState({ nameError: true })
             this.setState({ nameErrormsg: "Enter your name " })
             valid = false;
@@ -72,7 +72,7 @@ class CartItems extends React.Component {
             this.setState({ addressErrormsg: "please enter  your address " })
             valid = false;
         }
-        if (this.state.city.length == 0) {
+        if (this.state.city.length === 0) {
             this.setState({ cityError: true })
             this.setState({ cityErrormsg: "Enter your  city " })
             valid = false;
@@ -87,9 +87,6 @@ class CartItems extends React.Component {
         return valid;
 
     }
-
-
-
 
     componentDidMount() {
         service.getCartItems().then((res) => {
@@ -180,6 +177,7 @@ class CartItems extends React.Component {
             console.log(res);
             this.setState({ reload: !this.state.reload })
             this.componentDidMount();
+            this.props.history.push('/userdashboard')
         }).catch((err) => {
             console.log(err);
         })

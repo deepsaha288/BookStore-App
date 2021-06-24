@@ -9,8 +9,7 @@ import UserService from '../../Services/UserService';
 import Dont from "../../Assets/don't.png";
 import { Button} from '@material-ui/core';
 import Paginations from "@material-ui/lab/Pagination";
-import Bookstore from '../../FluxArchitecture/store/bookstore';
-import { addToCart } from '../../FluxArchitecture/Actions/actions';
+
 
 const service = new UserService();
 
@@ -23,16 +22,30 @@ class UserDashboard extends React.Component {
             _cartBooks: [],
             postsPerPage: "12",
             currentPage: "1",
+            books:[],
+            checkbook: false
         })
+    }
+    storeBooks = (books) => {
+        this.books = books;
+        return this.books;
+    }
+    getBooks = () => {
+        return this.books;
     }
     handleChange = (event) => {
         this.setState({ age: event.target.value });
     };
+
     componentDidMount() {
+        this.GetAllBooks();
+    }
+
+    GetAllBooks = () => {
         var books = [];
         service.getAllBooks().then((res) => {
             books = res.data.result;
-            var boo = Bookstore.storeBooks(books);
+            var boo = this.storeBooks(books);
             this.setState({ _books: boo });
         }).catch((err) => {
             console.log(err);
@@ -46,20 +59,25 @@ class UserDashboard extends React.Component {
             console.log(err);
         })
     }
-    componentWillMount() {
-        Bookstore.on("change", this.getBooks)
-    }
-    componentWillUnmount() {
-        Bookstore.removeListener("change", this.getBooks);
-    }
     getBooks = () => {
         console.log("rerender");
         this.setState({
-            _books: Bookstore.getBooks(),
+            _books:this.getBooks(),
         })
     }
-    addToCart1 = (productid) => {
-        addToCart(productid);
+    addToCart = (book) => {
+        console.log("im calles");
+        let data = {
+            isCart: true
+        }
+        service.addtocart(book._id,data).then((res) => {
+            console.log(res);
+            this.GetAllBooks();
+        }).catch((err) => {
+            console.log(err);
+        })
+        
+        
       
     }
     addToWishlist = (productid) => {
@@ -83,9 +101,6 @@ class UserDashboard extends React.Component {
         console.log(e.target.value);
         this.setState({ currentPage: newpage });
     };
-
-
-
 
 
     render() {
@@ -136,7 +151,7 @@ class UserDashboard extends React.Component {
                                     <div className="price">Rs.{book.price}</div>
 
                                     <div className="inlinebuttons">
-                                        {this.checkItemsinCart(book.bookName) ? <><Button variant="contained" className='addtobag' onClick={() => this.addToCart1(book._id)} color="primary">AddtoBag</Button>
+                                        {this.checkItemsinCart(book.bookName) ? <><Button variant="contained" className='addtobag' onClick={() => this.addToCart(book)} color="primary">AddtoBag</Button>
                                             <Button variant="contained" className='wishlist' color="default" onClick={() => this.addToWishlist(book._id)}>Wishlist </Button></>
                                             : <Button variant="contained" fullWidth className="addedtobag">Added to bag</Button>}
                                     </div>
