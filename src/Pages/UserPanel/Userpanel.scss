@@ -93,4 +93,22 @@
      }
     }
     }
+    .showbooks:hover .descClass {
+        display: flex;
+      }
+      .descClass {
+        display: none;
+        position: relative;
+        text-align: start;
+        flex-direction: column;
+        background-color: white;
+        border-radius: 5px;
+        border: 1px lightgray solid;
+        box-shadow: 1px 2px lightgray;
+        padding: 5px;
+        bottom: 10%;
+        left: 60%;
+        height: 180px;
+        min-width: 200px;
+      }
 }

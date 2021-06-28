@@ -1,14 +1,11 @@
 import React from 'react';
 import Appbar from '../../Components/Header/Appbar';
 import './Userpanel.scss'
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
 import UserService from '../../Services/UserService';
 import Dont from "../../Assets/don't.png";
-import { Button} from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import Paginations from "@material-ui/lab/Pagination";
+import Typography from "@material-ui/core/Typography";
 
 
 const service = new UserService();
@@ -17,13 +14,11 @@ class UserDashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = ({
-            age: "",
             _books: [],
             _cartBooks: [],
-            postsPerPage: "12",
+            postsPerPage: "10",
             currentPage: "1",
-            books:[],
-            checkbook: false
+            filterData: []
         })
     }
     storeBooks = (books) => {
@@ -33,12 +28,10 @@ class UserDashboard extends React.Component {
     getBooks = () => {
         return this.books;
     }
-    handleChange = (event) => {
-        this.setState({ age: event.target.value });
-    };
-
+    
     componentDidMount() {
         this.GetAllBooks();
+        this.GetcartItems();
     }
 
     GetAllBooks = () => {
@@ -46,11 +39,12 @@ class UserDashboard extends React.Component {
         service.getAllBooks().then((res) => {
             books = res.data.result;
             var boo = this.storeBooks(books);
-            this.setState({ _books: boo });
+            this.setState({ _books: boo ,filterData:books});
         }).catch((err) => {
             console.log(err);
         })
-
+    }
+    GetcartItems= () => {
         let token = localStorage.getItem('token');
         service.getCartItems().then((res) => {
             console.log(res);
@@ -59,26 +53,19 @@ class UserDashboard extends React.Component {
             console.log(err);
         })
     }
-    getBooks = () => {
-        console.log("rerender");
-        this.setState({
-            _books:this.getBooks(),
-        })
-    }
     addToCart = (book) => {
         console.log("im calles");
         let data = {
             isCart: true
         }
-        service.addtocart(book._id,data).then((res) => {
+        service.addtocart(book._id, data).then((res) => {
             console.log(res);
             this.GetAllBooks();
+            this.GetcartItems();
         }).catch((err) => {
             console.log(err);
         })
-        
-        
-      
+
     }
     addToWishlist = (productid) => {
         service.addtowishlist(productid).then((res) => {
@@ -97,48 +84,70 @@ class UserDashboard extends React.Component {
         return check;
     }
     changepage = (e, newpage) => {
-        console.log("imvdn");
         console.log(e.target.value);
         this.setState({ currentPage: newpage });
     };
 
+    searchM = (e) => {
+       console.log("hello filter")
+      let booksFilter =  [...this.state._books].filter((val)=>{
+      return val.bookName.indexOf(e.target.value) != -1;
+      });
+      console.log("filter",booksFilter)
+      if(e.target.value===''){
+        this.setState({_books:this.state.filterData});
+      }else{
+       this.setState({_books:booksFilter});
+      }
+    }
+
+    itemSort=(e) => {
+        
+         if (e.target.value === "asec") {
+             let sortData = [...this.state._books].sort(function (a, b) {
+               return a.price - b.price
+             });
+             console.log(sortData)
+            this.setState({_books:sortData});
+           }
+           else if (e.target.value === "dsec") {
+             let sortData = [...this.state._books].sort(function (a, b) {
+               return b.price - a.price
+             });
+             console.log(sortData)
+             this.setState({_books:sortData});
+           }
+         
+     };
 
     render() {
         const LastBook = this.state.currentPage * this.state.postsPerPage;
         const FirstBook = LastBook - this.state.postsPerPage;
-        console.log(this.state._books);
-        console.log('vfvc', this.state._books);
         const currentBooks = this.state._books.slice(FirstBook, LastBook);
         return (
             <>
-                < Appbar show={true} />
+                < Appbar show={true} cartLength={this.state._cartBooks} search= {this.searchM}/>
                 <div className="usercontent">
                     <div className="inlineheader">
                         <div className="headers">
-                            Books
+                          Books
                         </div>
-                        <div className="select">
-                            <FormControl variant="outlined" >
-                                <InputLabel id="demo-simple-select-filled-label">sortbyrelevance</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-outlined-label"
-                                    id="demo-simple-select-outlined"
-                                    value={this.state.age}
-                                    onChange={this.handleChange}
-                                    label="Age"
-                                >
-                                    <MenuItem value="">
-                                        <em>None</em>
-                                    </MenuItem>
-                                    <MenuItem value={10}>Price : low to high</MenuItem>
-                                    <MenuItem value={20}>Price : high to low</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </div>
+                        <div>
+                       <select style={{ width: '157px', height: '47px' }} onChange={(e) => this.itemSort(e)} >
+                      <option selected >Sort by relevance</option>
+                      <option value="dsec" >Price: high to low</option>
+                      <option value="asec"  >Price: low to high</option>
+                    </select>
+                     </div>
                     </div>
                     <div className="books">
                         {currentBooks.map((book, index) => {
                             return <div className="showbooks">
+                             {/* {this.state._cartBooks.map((cart) => {
+                            if (book._id === data._id) {
+                               this.data.isCart = true;
+                            }
+                             })} */}
                                 <div className="bookimage">
                                     <img src={Dont} alt="" />
                                 </div>
@@ -151,10 +160,16 @@ class UserDashboard extends React.Component {
                                     <div className="price">Rs.{book.price}</div>
 
                                     <div className="inlinebuttons">
-                                        {this.checkItemsinCart(book.bookName) ? <><Button variant="contained" className='addtobag' onClick={() => this.addToCart(book)} color="primary">AddtoBag</Button>
-                                            <Button variant="contained" className='wishlist' color="default" onClick={() => this.addToWishlist(book._id)}>Wishlist </Button></>
-                                            : <Button variant="contained" fullWidth className="addedtobag">Added to bag</Button>}
+                                        {this.checkItemsinCart(book.bookName) ? <><Button variant="contained" className='addtobag' onClick={() => this.addToCart(book)} color="primary">
+                                            AddtoBag </Button>
+                                     <Button variant="contained" className='wishlist' color="default" onClick={() => this.addToWishlist(book._id)}> Wishlist </Button></>
+                                    : <Button variant="contained" fullWidth className="addedtobag">Added to bag</Button>}
                                     </div>
+                                    <div className="descClass">
+                                     <Typography className="bookName">Book Details</Typography>
+                                    <Typography className="bookName">{book.bookname}</Typography>
+                                    {book.description}
+                                   </div>
                                 </div>
                             </div>
                         })
