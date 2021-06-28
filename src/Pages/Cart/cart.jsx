@@ -16,6 +16,7 @@ class CartItems extends React.Component {
         super(props);
         this.state = ({
             _cartbooks: [],
+            count :0,
             name: "",
             phno: "",
             pincode: "",
@@ -25,7 +26,6 @@ class CartItems extends React.Component {
             state: "",
             show: false,
             showOs: false,
-            reload: true,
             nameError: false, phnoError: false, pincodeError: false, localityError: false,
             addressError: false, cityError: false, stateError: false,
         })
@@ -89,10 +89,13 @@ class CartItems extends React.Component {
     }
 
     componentDidMount() {
+      this.diplay();
+    }
+
+    diplay =()=>{
         service.getCartItems().then((res) => {
-            console.log(res);
             this.setState({ _cartbooks: res.data.result });
-            console.log(JSON.stringify(this.state._cartbooks));
+            console.log(res.data.result);
         })
     }
     changeState = (e) => {
@@ -118,6 +121,7 @@ class CartItems extends React.Component {
         };
         service.order(data).then((res) => {
             console.log(res);
+            this.diplay();
             this.props.history.push('/ordersucess')
         }).catch((err) => {
             console.log(err);
@@ -133,6 +137,7 @@ class CartItems extends React.Component {
         console.log(data, productid);
         service.cartIncrementDecrement(data, productid).then((res) => {
             console.log(res);
+            this.diplay();
         }).catch((err) => {
             console.log(err);
         })
@@ -148,6 +153,8 @@ class CartItems extends React.Component {
         }
         service.cartIncrementDecrement(data, productid).then((res) => {
             console.log(res);
+            this.diplay();
+            
         }).catch((err) => {
             console.log(err);
         })
@@ -175,16 +182,15 @@ class CartItems extends React.Component {
     removeCartId = (id) => {
         service.removeCartItem(id).then((res) => {
             console.log(res);
-            this.setState({ reload: !this.state.reload })
-            this.componentDidMount();
-            this.props.history.push('/userdashboard')
+            this.diplay();
+           
         }).catch((err) => {
             console.log(err);
         })
     }
     render() {
         return (<>
-            <Appbar show={false} />
+            <Appbar show={false} cartLength={this.state._cartbooks}/>
 
             <div className="cartcontent"> <span className="Home">Home/MyCart</span>
                 <div className="cartitems box">
@@ -200,9 +206,9 @@ class CartItems extends React.Component {
                                     <div className="author"> by{val.product_id.author}</div>
                                     <div className="price">Rs.{val.product_id.price}</div>
                                     <div className="inlineicons">
-                                        <AddCircleOutlineTwoToneIcon style={{ opacity: 0.4 }} onClick={() => this.increment(val.product_id._id, val.quantityToBuy)} />
+                                        <AddCircleOutlineTwoToneIcon style={{ opacity: 0.4 }} onClick={() => this.increment(val._id, val.quantityToBuy)} />
                                         <div className="quantity">{val.quantityToBuy}</div>
-                                        <RemoveCircleOutlineTwoToneIcon style={{ opacity: 0.4 }} onClick={() => this.decrement(val.product_id._id, val.quantityToBuy)} />
+                                        <RemoveCircleOutlineTwoToneIcon style={{ opacity: 0.4 }} onClick={() => this.decrement(val._id, val.quantityToBuy)} />
                                         <div className="remove" onClick={() => this.removeCartId(val._id)}>Remove</div>
 
                                     </div>

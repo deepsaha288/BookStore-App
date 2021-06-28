@@ -142,8 +142,7 @@ export default class LoginPart extends React.Component {
                             /> <TextField
                                     id="outlined-basic"
                                     label="Email "
-                                className="textField"
-
+                                    className="textField"
                                     variant="outlined"
                                     margin='dense'
                                     name="email"
