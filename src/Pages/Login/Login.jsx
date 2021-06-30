@@ -3,7 +3,8 @@ import './Login.scss';
 import { TextField, Button, InputAdornment } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import UserService from '../../Services/UserService';
-import { withRouter } from 'react-router';
+import { withRouter} from 'react-router';
+import {Link  } from 'react-router-dom';
 
 const service = new UserService();
 
@@ -114,6 +115,7 @@ render() {
                     }}
 
                 /> 
+                {/* <div className="forget"><Link to="/ForgetPassword">ForgetPassword</Link></div> */}
             </div>
 
             <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>    <div className="line"></div>OR<div className="line"></div></div>

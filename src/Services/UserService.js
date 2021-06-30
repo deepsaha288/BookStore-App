@@ -77,4 +77,20 @@ export default class userService {
             }
         });
     }
+    getWishlist(){
+        return axios.getMethod(`${this.baseUrl}user/get_wishlist_items/`,{
+            headers:{
+                'x-access-token':localStorage.getItem('usertoken'),
+            }
+        });
+    }
+    
+    deleteWishlistItem(id){
+        return axios.deleteMethod(`${this.baseUrl}user/remove_wishlist_item/${id}`,{
+            headers:{
+               
+                'x-access-token':localStorage.getItem('usertoken'),
+            }
+        });
+    }
 }
