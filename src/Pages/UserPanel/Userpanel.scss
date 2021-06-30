@@ -1,6 +1,7 @@
 @import "../Styles/mixins.scss";
 
 .usercontent {
+     
     // background-color: lightpink;
     @include box(max-width, 89.4vh, border-box);
     @include flex(column, flex-start, flex-start);
@@ -20,6 +21,8 @@
     }.books{
         @include flex(row,space-between,center);
         flex-wrap: wrap;
+        width: 100%vh;
+        padding-left: 20px;
     .showbooks {
         @include box(170px,220px,border-box);
         border: 1px solid #E2E2E2;
@@ -111,4 +114,24 @@
         height: 180px;
         min-width: 200px;
       }
+
+    //   .outOfStock {
+    //     background-color: white;
+    //     color: black;
+    //     height: 30px;
+    //     display: flex;
+    //     justify-content: center;
+    //     position:absolute;
+    //     z-index: 100;
+    //     width:100px;
+    //     opacity: 0.9;
+    //     top: 100px;
+    //   }
 }
+// @media only screen and (max-width: 360px) {
+//     .usercontent{
+//         width: 100%;
+//     } .books{
+//         width: 100%;
+//     }
+// }

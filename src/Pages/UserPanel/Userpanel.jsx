@@ -28,7 +28,7 @@ class UserDashboard extends React.Component {
     getBooks = () => {
         return this.books;
     }
-    
+
     componentDidMount() {
         this.GetAllBooks();
         this.GetcartItems();
@@ -39,12 +39,12 @@ class UserDashboard extends React.Component {
         service.getAllBooks().then((res) => {
             books = res.data.result;
             var boo = this.storeBooks(books);
-            this.setState({ _books: boo ,filterData:books});
+            this.setState({ _books: boo, filterData: books });
         }).catch((err) => {
             console.log(err);
         })
     }
-    GetcartItems= () => {
+    GetcartItems = () => {
         let token = localStorage.getItem('token');
         service.getCartItems().then((res) => {
             console.log(res);
@@ -89,36 +89,36 @@ class UserDashboard extends React.Component {
     };
 
     searchM = (e) => {
-       console.log("hello filter")
-      let booksFilter =  [...this.state._books].filter((val)=>{
-      return val.bookName.indexOf(e.target.value) != -1;
-      });
-      console.log("filter",booksFilter)
-      if(e.target.value===''){
-        this.setState({_books:this.state.filterData});
-      }else{
-       this.setState({_books:booksFilter});
-      }
+        console.log("hello filter")
+        let booksFilter = [...this.state._books].filter((val) => {
+            return val.bookName.indexOf(e.target.value) != -1;
+        });
+        console.log("filter", booksFilter)
+        if (e.target.value === '') {
+            this.setState({ _books: this.state.filterData });
+        } else {
+            this.setState({ _books: booksFilter });
+        }
     }
 
-    itemSort=(e) => {
-        
-         if (e.target.value === "asec") {
-             let sortData = [...this.state._books].sort(function (a, b) {
-               return a.price - b.price
-             });
-             console.log(sortData)
-            this.setState({_books:sortData});
-           }
-           else if (e.target.value === "dsec") {
-             let sortData = [...this.state._books].sort(function (a, b) {
-               return b.price - a.price
-             });
-             console.log(sortData)
-             this.setState({_books:sortData});
-           }
-         
-     };
+    itemSort = (e) => {
+
+        if (e.target.value === "asec") {
+            let sortData = [...this.state._books].sort(function (a, b) {
+                return a.price - b.price
+            });
+            console.log(sortData)
+            this.setState({ _books: sortData });
+        }
+        else if (e.target.value === "dsec") {
+            let sortData = [...this.state._books].sort(function (a, b) {
+                return b.price - a.price
+            });
+            console.log(sortData)
+            this.setState({ _books: sortData });
+        }
+
+    };
 
     render() {
         const LastBook = this.state.currentPage * this.state.postsPerPage;
@@ -126,28 +126,23 @@ class UserDashboard extends React.Component {
         const currentBooks = this.state._books.slice(FirstBook, LastBook);
         return (
             <>
-                < Appbar show={true} cartLength={this.state._cartBooks} search= {this.searchM}/>
+                < Appbar show={true} cartLength={this.state._cartBooks} search={this.searchM} />
                 <div className="usercontent">
                     <div className="inlineheader">
                         <div className="headers">
-                          Books
+                            Books
                         </div>
                         <div>
-                       <select style={{ width: '157px', height: '47px' }} onChange={(e) => this.itemSort(e)} >
-                      <option selected >Sort by relevance</option>
-                      <option value="dsec" >Price: high to low</option>
-                      <option value="asec"  >Price: low to high</option>
-                    </select>
-                     </div>
+                            <select style={{ width: '157px', height: '47px' }} onChange={(e) => this.itemSort(e)} >
+                                <option selected >Sort by relevance</option>
+                                <option value="dsec" >Price: high to low</option>
+                                <option value="asec"  >Price: low to high</option>
+                            </select>
+                        </div>
                     </div>
                     <div className="books">
                         {currentBooks.map((book, index) => {
                             return <div className="showbooks">
-                             {/* {this.state._cartBooks.map((cart) => {
-                            if (book._id === data._id) {
-                               this.data.isCart = true;
-                            }
-                             })} */}
                                 <div className="bookimage">
                                     <img src={Dont} alt="" />
                                 </div>
@@ -158,23 +153,30 @@ class UserDashboard extends React.Component {
                                         <div className="rate">4.5 &#9733;</div>
                                     </div>
                                     <div className="price">Rs.{book.price}</div>
-
                                     <div className="inlinebuttons">
-                                        {this.checkItemsinCart(book.bookName) ? <><Button variant="contained" className='addtobag' onClick={() => this.addToCart(book)} color="primary">
-                                            AddtoBag </Button>
-                                     <Button variant="contained" className='wishlist' color="default" onClick={() => this.addToWishlist(book._id)}> Wishlist </Button></>
-                                    : <Button variant="contained" fullWidth className="addedtobag">Added to bag</Button>}
+                                        {this.checkItemsinCart(book.bookName) ?
+                                            <>
+                                                : <Button variant="contained" fullWidth className="addedtobag">Added to bag</Button>
+
+
+                                                <Button variant="contained" className='addtobag' onClick={() => this.addToCart(book)} color="primary">
+                                                    AddtoBag
+                                                </Button>
+                                                <Button variant="contained" className='wishlist' color="default" onClick={() => this.addToWishlist(book._id)}>
+                                                    Wishlist
+                                                </Button>
+                                            </>
+                                            : <Button variant="contained" fullWidth className="addedtobag">Added to wishlist</Button>}
                                     </div>
                                     <div className="descClass">
-                                     <Typography className="bookName">Book Details</Typography>
-                                    <Typography className="bookName">{book.bookname}</Typography>
-                                    {book.description}
-                                   </div>
+                                        <Typography className="bookName">Book Details</Typography>
+                                        <Typography className="bookName">{book.bookname}</Typography>
+                                        {book.description}
+                                    </div>
                                 </div>
                             </div>
                         })
                         }
-
                     </div>
                     <div className="paginationBlock">
                         <Paginations

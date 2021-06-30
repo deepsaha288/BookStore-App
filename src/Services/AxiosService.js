@@ -7,7 +7,7 @@ export default class AxiosService{
     getMethod =(url,isHeaderRequired = false) =>{
         return axios.get(url,isHeaderRequired)
     }
-    deleteMethod =(url,isHeaderRequired =false)=>{
+    deleteMethod =(url,isHeaderRequired)=>{
         return axios.delete(url,isHeaderRequired)
 
     }
