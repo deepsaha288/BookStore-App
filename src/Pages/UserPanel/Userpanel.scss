@@ -1,7 +1,6 @@
 @import "../Styles/mixins.scss";
 
 .usercontent {
-     
     // background-color: lightpink;
     @include box(max-width, 89.4vh, border-box);
     @include flex(column, flex-start, flex-start);
@@ -96,6 +95,10 @@
      }
     }
     }
+    .option{
+        width: 157px;
+        height: 47px;
+    }
     .showbooks:hover .descClass {
         display: flex;
       }
@@ -115,23 +118,28 @@
         min-width: 200px;
       }
 
-    //   .outOfStock {
-    //     background-color: white;
-    //     color: black;
-    //     height: 30px;
-    //     display: flex;
-    //     justify-content: center;
-    //     position:absolute;
-    //     z-index: 100;
-    //     width:100px;
-    //     opacity: 0.9;
-    //     top: 100px;
-    //   }
+      .outOfStock {
+        background-color: white;
+        color: black;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        position:absolute;
+        z-index: 100;
+        width:100px;
+        opacity: 0.9;
+        top: 100px;
+      }
 }
-// @media only screen and (max-width: 360px) {
+ @media only screen and (max-width: 360px) {
 //     .usercontent{
-//         width: 100%;
+//         width: 90%;
 //     } .books{
-//         width: 100%;
+//         width: 90%;
+//         justify-content: center;
 //     }
-// }
+     .inlineheader{
+//         padding-top: 0px;
+            margin-left: 25px;
+     }
+ }

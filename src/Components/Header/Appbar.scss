@@ -102,7 +102,7 @@
 }
 @media only screen and (max-width: 360px) {
     .appbar {  
-         width: 100vw;  
+         width: 115vw;  
         div {
             img {
             width: 30px;
@@ -116,16 +116,7 @@
            
         }}
         .input{
-            width: 20%;
-            height: 29px;
-            border-radius: 8px;
-            align-content: center;
-            background: white;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            padding-left: 3px;
-            flex-grow: 0;
+           
             display: none;
             
             input{
@@ -158,8 +149,6 @@
             color: white;
             display: flex;
             flex-direction: column;
-            width: auto;
-            width: 100%;
             margin-left: 55px;
 
             .carticon{
@@ -172,7 +161,7 @@
     
 }
    
-    .btn1 {
+.btn1 {
         border: 1px solid grey;
         width: 100px;
         cursor: pointer;
@@ -180,11 +169,28 @@
  }
 }
 .MuiPopover-paper{
-    width: 15%;
-    padding: 5%;
+    width: 25% !important;
 }
-.MuiAvatar-root {
-    width: 60px;
+.MuiMenuItem-root{
+    margin-left: 70px !important;
+    height: 50% !important;
+}
+
+.visible {
+    width: 20px;
     height: 60px;
-    
+    overflow: visible ;
+     margin-left: 70px !important;
+}
+.new{
+    border: 1px solid red;
+    width: 100%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+}
+.popup{
+    display: flex;
+    flex-direction:row;
+    margin-left: 30px;
 }

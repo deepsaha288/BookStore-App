@@ -18,7 +18,10 @@ class UserDashboard extends React.Component {
             _cartBooks: [],
             postsPerPage: "10",
             currentPage: "1",
-            filterData: []
+            filterData: [],
+            _wishlistbooks:[],
+            open: false,
+            quantity:[]
         })
     }
     storeBooks = (books) => {
@@ -32,6 +35,7 @@ class UserDashboard extends React.Component {
     componentDidMount() {
         this.GetAllBooks();
         this.GetcartItems();
+        this.getWishlistItem();
     }
 
     GetAllBooks = () => {
@@ -43,6 +47,15 @@ class UserDashboard extends React.Component {
         }).catch((err) => {
             console.log(err);
         })
+    }
+    
+    getWishlistItem = () => {
+        service.getWishlist().then((data) => {
+            this.setState({ _wishlistbooks: data.data.result  });
+        }).catch(error => {
+            console.log("error", error);
+        })
+
     }
     GetcartItems = () => {
         let token = localStorage.getItem('token');
@@ -70,19 +83,33 @@ class UserDashboard extends React.Component {
     addToWishlist = (productid) => {
         service.addtowishlist(productid).then((res) => {
             console.log(res);
+            this.GetAllBooks();
+            this.getWishlistItem();
         }).catch((err) => {
             console.log(err);
         })
     }
-    checkItemsinCart = (bookname) => {
-        let check = true;
+    checkCartItem = (bookname) => {
+        let check = false;
         this.state._cartBooks.map((val) => {
             if (val.product_id.bookName === bookname) {
-                check = false
+                check = true
             }
         })
         return check;
     }
+    checkWishlistItem = (bookname) => {
+      
+         let check = true;
+        this.state._wishlistbooks.map((val) => {
+            console.log(val,bookname)
+            if (val.product_id.bookName === bookname) {
+                 check = false
+            }
+        })
+         return check;
+    }
+
     changepage = (e, newpage) => {
         console.log(e.target.value);
         this.setState({ currentPage: newpage });
@@ -100,6 +127,18 @@ class UserDashboard extends React.Component {
             this.setState({ _books: booksFilter });
         }
     }
+
+ descriptionshow = (e) => {
+    e.stopPropagation();
+    this.setState({open:true});
+  
+  }
+ descriptionhide = (e) => {
+    e.stopPropagation();
+    this.setState({open:false});
+    
+  }
+
 
     itemSort = (e) => {
 
@@ -133,7 +172,7 @@ class UserDashboard extends React.Component {
                             Books
                         </div>
                         <div>
-                            <select style={{ width: '157px', height: '47px' }} onChange={(e) => this.itemSort(e)} >
+                            <select className="option" onChange={(e) => this.itemSort(e)} >
                                 <option selected >Sort by relevance</option>
                                 <option value="dsec" >Price: high to low</option>
                                 <option value="asec"  >Price: low to high</option>
@@ -153,21 +192,30 @@ class UserDashboard extends React.Component {
                                         <div className="rate">4.5 &#9733;</div>
                                     </div>
                                     <div className="price">Rs.{book.price}</div>
-                                    <div className="inlinebuttons">
-                                        {this.checkItemsinCart(book.bookName) ?
-                                            <>
-                                                : <Button variant="contained" fullWidth className="addedtobag">Added to bag</Button>
-
-
-                                                <Button variant="contained" className='addtobag' onClick={() => this.addToCart(book)} color="primary">
-                                                    AddtoBag
-                                                </Button>
-                                                <Button variant="contained" className='wishlist' color="default" onClick={() => this.addToWishlist(book._id)}>
-                                                    Wishlist
-                                                </Button>
-                                            </>
-                                            : <Button variant="contained" fullWidth className="addedtobag">Added to wishlist</Button>}
-                                    </div>
+                                    <div className="inlinebuttons" >
+                                        {this.checkWishlistItem(book.bookName)
+                                           ?
+                                          <div>
+                                        {this.checkCartItem(book.bookName) ?
+                                           <>
+                                           <Button variant="contained" fullWidth className="addedtobag">Added to bag</Button>
+                                          </>
+                                          :
+                                          <>
+                                        <Button variant="contained" className='addtobag' onClick={() => this.addToCart(book)} color="primary">
+                                     AddtoBag </Button>
+                                  
+                                     <Button variant="contained" className='wishlist' color="default" onClick={() => this.addToWishlist(book._id)}>
+                                     Wishlist </Button>
+                                     </>
+                                  } </div>
+                                  :
+                                  <Button variant="contained" fullWidth className="addedtobag" >WishList </Button>
+                                }
+                              </div>
+                              <div className="outOfStock"
+                                 style={{ display:this.state._books.value <= 1 ? 'flex' : 'none' }}
+                                  onMouseOver={(e) => this.descriptionshow(e)} onMouseLeave={(e) => this.descriptionhide(e)}>Out Of Stock</div>
                                     <div className="descClass">
                                         <Typography className="bookName">Book Details</Typography>
                                         <Typography className="bookName">{book.bookname}</Typography>
@@ -186,7 +234,6 @@ class UserDashboard extends React.Component {
                             onChange={this.changepage}
                         />
                     </div>
-
                 </div>
             </>
         )

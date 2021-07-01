@@ -51,7 +51,6 @@ export default class Appbar extends react.Component {
   render() {
     const open = Boolean(this.state.anchorEl);
     const id = open ? 'simple-popover' : undefined;
-    // console.log(open,id)
     return (
       <>
         <div className="appbar">
@@ -68,7 +67,9 @@ export default class Appbar extends react.Component {
               <div className="pro"> <PermIdentityIcon aria-describedby={id} variant="contained" color="primary" onClick={this.handleClick} />
                 Profile
               </div>
-              <Popover
+              <Popover  PaperProps={{
+          style: { width: '10%', padding:'10px' },
+        }}
                 id={id}
                 open={open}
                 anchorEl={this.state.anchorEl}
@@ -82,16 +83,22 @@ export default class Appbar extends react.Component {
                   horizontal: 'center',
                 }}
               >
-                <Typography className="popup">
-                <MenuItem>
+                <div className="new">
+                <Typography >
+                <MenuItem className="visible">
                     <Avatar/>
                   </MenuItem>
-                 <MenuItem>Deep Saha</MenuItem>
+                 <MenuItem>Deep</MenuItem>
+                 <div className="popup">
                     <Link to="/WishList">
                      <button className="btn1">WishList</button> 
                     </Link>
+                    <Link to="/logout">
                      <button className="btn1">Logout</button>
+                     </Link>
+                     </div>
                 </Typography>
+                </div>
               </Popover>
               <Link to="/cart">
                 <div className="root">
