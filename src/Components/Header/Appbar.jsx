@@ -68,7 +68,7 @@ export default class Appbar extends react.Component {
                 Profile
               </div>
               <Popover  PaperProps={{
-          style: { width: '10%', padding:'10px' },
+          style: { width: '20%', padding:'10px' },
         }}
                 id={id}
                 open={open}

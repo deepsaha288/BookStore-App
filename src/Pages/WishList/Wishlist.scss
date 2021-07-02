@@ -15,9 +15,13 @@ $border: 1px solid #d9cccc;
 .title1 {
     width: 81%;
 }
-
+.bookImage{
+    display: flex;
+    width: 30%;
+    border: black;
+}
 .cartBag-content1 {
-    width: 78%;
+    width: 70%;
     min-height: 223px;
     border: 1px solid #d9cccc;
     margin-top: 20px;
@@ -35,7 +39,7 @@ $border: 1px solid #d9cccc;
 }
 .text-content1 {
     width: 180px;
-    width: 86%;
+    width: 76%;
     display: flex;
     height: 150px;
 }
@@ -51,10 +55,12 @@ $border: 1px solid #d9cccc;
     height: 12px;
     color: #a49595;
     font-weight: 600;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+  
 }
 .price1 {
     font-weight: bold;
+
 }
 .popup{
     width: 12% !important;
@@ -78,4 +84,18 @@ $border: 1px solid #d9cccc;
 .btn-move{
     font-size: 7px;
     font-weight: bolder;
+}
+.delelte-content{
+    display:flex;
+    flex-direction: row;
+     justify-items: end;
+     justify-content: space-around;
+}
+@media only screen and (max-width: 360px) {
+.CartBag-frame1 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 }

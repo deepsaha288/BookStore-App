@@ -1,13 +1,13 @@
 @import "../Styles/mixins.scss";
 
 .usercontent {
-    // background-color: lightpink;
+    // background-color:darkgray;
     @include box(max-width, 89.4vh, border-box);
     @include flex(column, flex-start, flex-start);
     font-family: Roboto;
     margin: 0 15.5%;
     .inlineheader {
-        padding-top: 10px;
+        padding-top: 20px;
         width: 100%;
         @include flex(row, space-between, center);
         .headers {
@@ -32,7 +32,7 @@
             @include box(100%,50%,border-box);
             background-color:#E2E2E2;
             img{
-                width: 70px;
+                width: 80px;
             }
         }
         .content{
@@ -43,7 +43,7 @@
                 padding-bottom: 3px;
             }
             .price{
-                padding-bottom: 1px;
+                padding-bottom: 2px;
             }
             .rating{
              display: flex;
@@ -83,6 +83,7 @@
                 color:black;
                 background: white;
                 font-size: 10px;
+                margin-left: 15px;
 
              }
              .addedtobag{
@@ -121,14 +122,14 @@
       .outOfStock {
         background-color: white;
         color: black;
-        height: 30px;
         display: flex;
+        font-size: 15px;
         justify-content: center;
         position:absolute;
         z-index: 100;
         width:100px;
-        opacity: 0.9;
-        top: 100px;
+        opacity: 0.90;
+        top:70%;
       }
 }
  @media only screen and (max-width: 360px) {

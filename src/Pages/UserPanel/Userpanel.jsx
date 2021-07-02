@@ -21,7 +21,7 @@ class UserDashboard extends React.Component {
             filterData: [],
             _wishlistbooks:[],
             open: false,
-            quantity:[]
+            
         })
     }
     storeBooks = (books) => {
@@ -183,6 +183,14 @@ class UserDashboard extends React.Component {
                         {currentBooks.map((book, index) => {
                             return <div className="showbooks">
                                 <div className="bookimage">
+                                    {book.quantity==1 ?
+                                    <div className="outOfStock"onMouseOver={(e) => this.descriptionshow(e)} onMouseLeave={(e) => this.descriptionhide(e)}>
+                                       Out Of Stock 
+                                    </div>
+                                   : 
+                                    <>
+                                    </>
+                                }
                                     <img src={Dont} alt="" />
                                 </div>
                                 <div className="content">
@@ -213,9 +221,6 @@ class UserDashboard extends React.Component {
                                   <Button variant="contained" fullWidth className="addedtobag" >WishList </Button>
                                 }
                               </div>
-                              <div className="outOfStock"
-                                 style={{ display:this.state._books.value <= 1 ? 'flex' : 'none' }}
-                                  onMouseOver={(e) => this.descriptionshow(e)} onMouseLeave={(e) => this.descriptionhide(e)}>Out Of Stock</div>
                                     <div className="descClass">
                                         <Typography className="bookName">Book Details</Typography>
                                         <Typography className="bookName">{book.bookname}</Typography>
