@@ -27,6 +27,7 @@ export default class WishList extends Component {
         this.getWishlistItem();
         this.GetcartItems();
         this.delete();
+        
     }
 
     getWishlistItem = () => {
@@ -56,8 +57,8 @@ export default class WishList extends Component {
       }
       service.addtocart(book._id, Data).then((res) => {
         console.log(res);
-        this.GetcartItems();
-        this.delete();
+         this.GetcartItems();
+        this.delete(book._id);
     }).catch((err) => {
         console.log(err);
     })
